@@ -3,7 +3,7 @@ package ru.javawebinar.topjava.web;
 import org.slf4j.Logger;
 import org.springframework.util.StringUtils;
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.repository.inMamory.MealRepository;
+import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.web.controller.MealRestController;
 
@@ -29,7 +29,7 @@ public class MealServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
-        controller = new MealRestController(new MealService(new MealRepository()));
+        controller = new MealRestController(new MealService(new InMemoryMealRepository()));
     }
 
     @Override
@@ -38,24 +38,27 @@ public class MealServlet extends HttpServlet {
 
         String action = request.getParameter("action");
         String id = request.getParameter("id");
+        //int userId = Integer.parseInt(request.getParameter("userId"));
+        int userId = 0;
 
         if (action == null) {
-            request.setAttribute("mealList", controller.getAll());
+            request.setAttribute("mealList", controller.getAll(userId));
             request.getRequestDispatcher(LIST_MEAL).forward(request, response);
             log.debug("get all meals");
         } else if (action.equalsIgnoreCase("edit")) {
             if (id != null) {
-                Meal meal = controller.get(Integer.parseInt(id));
+                Meal meal = controller.get(Integer.parseInt(id), userId);
                 request.setAttribute("meal", meal);
             }
             request.getRequestDispatcher(ADD_OR_EDIT).forward(request, response);
             log.debug("redirect to edit/add meal");
         } else if (action.equalsIgnoreCase("delete")){
-            controller.delete(Integer.parseInt(id));
+            controller.delete(Integer.parseInt(id), userId);
             response.sendRedirect("meals");
             log.debug("delete meal with id - " + Integer.parseInt(id));
         } else {
-            request.setAttribute("mealList", controller.getAll());
+            //request.setAttribute("mealList", controller.getAll(userId));
+            request.setAttribute("mealList", controller.getAll(userId));
             request.getRequestDispatcher(LIST_MEAL).forward(request, response);
             log.debug("get all meals");
         }
@@ -64,25 +67,28 @@ public class MealServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         request.setCharacterEncoding("UTF-8");
+        //int userId = Integer.parseInt(request.getParameter("userId"));
+        int userId = 0;
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
         LocalDateTime dateTime = LocalDateTime.parse(request.getParameter("dateTime"), formatter);
 
         Meal meal = new Meal(dateTime,
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")));
+                Integer.parseInt(request.getParameter("calories")), userId);
 
         if (StringUtils.hasLength(request.getParameter("id"))) {
             int id = Integer.parseInt(request.getParameter("id"));
-            controller.update(meal, id);
+            meal.setId(id);
+            controller.save(meal, meal.getUserId());
             log.debug("updated meal with id - " + id);
         } else {
-            controller.create(meal);
+            controller.create(meal, meal.getUserId());
             log.debug("created new meal");
         }
 
         RequestDispatcher view = request.getRequestDispatcher("/meals.jsp");
-        request.setAttribute("mealList", controller.getAll());
+        request.setAttribute("mealList", controller.getAll(userId));
         view.forward(request, response);
     }
 }

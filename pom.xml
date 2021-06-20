@@ -16,6 +16,8 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 
+        <spring.version>5.3.4</spring.version>
+
         <!-- Logging -->
         <logback.version>1.2.3</logback.version>
         <slf4j.version>1.7.30</slf4j.version>
@@ -64,6 +66,13 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Spring -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-context</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
         <!--Web-->
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -80,13 +89,6 @@
             <groupId>net.sargue</groupId>
             <artifactId>java-time-jsptags</artifactId>
             <version>1.1.4</version>
-        </dependency>
-
-        <!--Spring-->
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-context</artifactId>
-            <version>5.1.10.RELEASE</version>
         </dependency>
 
         <!--DataBase-->

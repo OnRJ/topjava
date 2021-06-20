@@ -1,7 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
-import ru.javawebinar.topjava.model.MealTo;
+import ru.javawebinar.topjava.to.MealTo;
 
 import java.time.*;
 import java.util.*;
@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 public class MealsUtil {
     public static final int CALORIES_PER_DAY = 2000;
 
-    private MealsUtil(){}
+    private MealsUtil(){
+
+    }
 
     public static List<MealTo> filtered(Collection<Meal> meals) {
         Map<LocalDate, Integer> map = meals.stream()
