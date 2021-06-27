@@ -1,41 +1,42 @@
 package ru.javawebinar.topjava.service;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.inmemory.InMemoryMealRepository;
 
-import java.util.List;
+import java.util.Collection;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.*;
+import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 
 @Service
 public class MealService {
 
     private final InMemoryMealRepository repository;
 
-    public MealService(@Qualifier("jdbcMealRepository") InMemoryMealRepository repository) {
+    public MealService(InMemoryMealRepository repository) {
         this.repository = repository;
     }
 
-    public Meal get(int id, int userId) {
-        return repository.get(id, userId);
+    public Meal get(int id) {
+        checkNotFound(id != authUserId() || repository.get(id) != null, "meal id " + id);
+        return repository.get(id);
     }
 
-    public void delete(int id, int userId) {
-        repository.delete(id, userId);
+    public void delete(int id) {
+        checkNotFound(id != authUserId() || repository.get(id) != null, "meal id " + id);
+        repository.delete(id);
     }
 
-    public List<Meal> getAll(int userId) {
-        return repository.getAll(userId);
+    public Collection<Meal> getAll() {
+        return repository.getAll();
     }
 
-    public void save(Meal meal, int userId) {
+    public void save(Meal meal, int id) {
         Assert.notNull(meal, "meal must not be null");
-        repository.save(meal, userId);
-    }
-
-    public Meal create(Meal meal, int userId) {
-        Assert.notNull(meal, "meal must not be null");
-        return repository.save(meal, userId);
+        checkNotFoundWithId(meal, id);
+        checkNotFound(meal.getUserId() == authUserId(), "meal id " + meal.getId());
+        repository.save(meal);
     }
 }

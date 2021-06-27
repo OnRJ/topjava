@@ -9,8 +9,17 @@ import java.util.stream.Collectors;
 
 public class MealsUtil {
     public static final int CALORIES_PER_DAY = 2000;
+    public static final List<Meal> meals = new ArrayList<>();
 
-    private MealsUtil(){
+    static {
+        meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 10, 0), "Завтрак", 500, 0));
+        meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 13, 0), "Обед", 1000, 0));
+        meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 30, 20, 0), "Ужин", 500, 0));
+        meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 0, 0), "Еда на граничное значение", 100, 0));
+        meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 10, 0), "Завтрак", 1000, 0));
+        meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 13, 0), "Обед", 500, 0));
+        meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин", 410, 0));
+        meals.add(new Meal(LocalDateTime.of(2020, Month.JANUARY, 31, 20, 0), "Ужин не твой", 410, 1));
 
     }
 
@@ -19,6 +28,7 @@ public class MealsUtil {
                 .collect(Collectors.groupingBy(meal -> meal.getDateTime().toLocalDate(), Collectors.summingInt(Meal::getCalories)));
 
         return meals.stream()
+                .sorted(Comparator.comparing(Meal::getDateTime).reversed())
                 .map(meal -> new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(),
                         meal.getCalories(), map.get(meal.getDateTime().toLocalDate()) > CALORIES_PER_DAY))
                 .collect(Collectors.toList());

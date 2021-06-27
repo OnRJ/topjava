@@ -1,11 +1,13 @@
 package ru.javawebinar.topjava.model;
 
+import javax.persistence.Entity;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.Set;
 
 import static ru.javawebinar.topjava.util.MealsUtil.CALORIES_PER_DAY;
 
+@Entity
 public class User extends AbstractNamedEntity {
 
     private String email;
