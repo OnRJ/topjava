@@ -19,24 +19,24 @@ public class MealService {
         this.repository = repository;
     }
 
-    public Meal get(int id) {
-        checkNotFound(id != authUserId() || repository.get(id) != null, "meal id " + id);
-        return repository.get(id);
+    public Meal get(int id, int userId) {
+        checkNotFound(id != userId || repository.get(id, userId) != null, "meal id " + id);
+        return repository.get(id, userId);
     }
 
-    public void delete(int id) {
-        checkNotFound(id != authUserId() || repository.get(id) != null, "meal id " + id);
-        repository.delete(id);
+    public void delete(int id, int userId) {
+        checkNotFound(id != userId || repository.get(id, userId) != null, "meal id " + id);
+        repository.delete(id, userId);
     }
 
-    public Collection<Meal> getAll() {
-        return repository.getAll();
+    public Collection<Meal> getAll(int userId) {
+        return repository.getAll(userId);
     }
 
-    public void save(Meal meal, int id) {
+    public void save(Meal meal, int id, int userId) {
         Assert.notNull(meal, "meal must not be null");
         checkNotFoundWithId(meal, id);
-        checkNotFound(meal.getUserId() == authUserId(), "meal id " + meal.getId());
-        repository.save(meal);
+        checkNotFound(meal.getUserId() == userId, "meal id " + meal.getId());
+        repository.save(meal, userId);
     }
 }

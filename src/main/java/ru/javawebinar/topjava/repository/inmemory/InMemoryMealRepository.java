@@ -10,10 +10,10 @@ import ru.javawebinar.topjava.util.MealsUtil;
 import java.util.Collection;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
+import static ru.javawebinar.topjava.repository.inmemory.InMemoryUserRepository.USER_ID;
 
 @Repository
 public class InMemoryMealRepository implements MealRepository {
