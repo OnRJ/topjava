@@ -18,7 +18,8 @@ public class User extends AbstractNamedEntity {
 
     private Date registered = new Date();
 
-    private final Set<Role> roles;
+    @ElementCollection
+    private Set<Role> roles;
 
     private int caloriesPerDay = CALORIES_PER_DAY;
 
