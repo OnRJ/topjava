@@ -76,8 +76,7 @@ public class MealServlet extends HttpServlet {
 
         Meal meal = new Meal(dateTime,
                 request.getParameter("description"),
-                Integer.parseInt(request.getParameter("calories")),
-                SecurityUtil.authUserId());
+                Integer.parseInt(request.getParameter("calories")));
 
         if (StringUtils.hasLength(request.getParameter("id"))) {
             int id = Integer.parseInt(request.getParameter("id"));
